@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:wave_slider/wave_painter.dart';
 
 class WaveSlider extends StatefulWidget {
   final double width;
   final double height;
 
-  const WaveSlider({this.width = 350.0, this.height = 50.0});
+  final Color color;
+
+  const WaveSlider(
+      {this.width = 350.0, this.height = 50.0, this.color = Colors.black});
 
   @override
   _WaveSliderState createState() => _WaveSliderState();
@@ -35,14 +39,12 @@ class _WaveSliderState extends State<WaveSlider> {
     RenderBox box = context.findRenderObject();
     Offset offset = box.globalToLocal(update.globalPosition);
     _updateDragPosition(offset);
-    print(offset.dx);
   }
 
   void _onDragStart(BuildContext context, DragStartDetails start) {
     RenderBox box = context.findRenderObject();
     Offset offset = box.globalToLocal(start.globalPosition);
     _updateDragPosition(offset);
-    print(offset.dx);
   }
 
   void _onDragEnd(BuildContext context, DragEndDetails end) {
@@ -56,12 +58,12 @@ class _WaveSliderState extends State<WaveSlider> {
         child: Container(
           width: widget.width,
           height: widget.height,
-          color: Colors.red,
-          child: Column(
-            children: <Widget>[
-              Text(_dragPosition.toString()),
-              Text(_dragPercentage.toString()),
-            ],
+          child: CustomPaint(
+            painter: WavePainter(
+              color: widget.color,
+              dragPercentage: _dragPercentage,
+              sliderPosition: _dragPosition,
+            ),
           ),
         ),
         onHorizontalDragUpdate: (DragUpdateDetails update) =>
